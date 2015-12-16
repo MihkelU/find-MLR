@@ -7,8 +7,6 @@ import csv
 import threading
 import queue
 import GeneticAlgorithm
-import SimulatedAnnealing
-import time
 import sys
 
 class mainWindow(Frame):
@@ -47,7 +45,6 @@ class mainWindow(Frame):
                 self.text.yview(END)
                 self.text.config(state=DISABLED)
 
-                print(msg)
             except queue.Empty:
                 pass
 
@@ -55,7 +52,6 @@ class mainWindow(Frame):
 
         # Reading in the data matrix
         self.master.title("Descriptor finder")
-        #self.pack(fill=BOTH, expand=1)
 
         # Creating the menus
         menubar = Menu(self.master)
@@ -195,12 +191,12 @@ class GAWindow(Frame):
         self.thread.start()
         self.periodiccall()
 
+
     def periodiccall(self): # For turning button1 active
         if self.thread.is_alive():
             self.after(10, self.periodiccall)
         else:
             self.button1.config(state="active")
-
 
 
 class GA_Thread(threading.Thread):
@@ -229,13 +225,6 @@ class GA_Thread(threading.Thread):
                                                  population_size=self.population_size, N_of_features=self.N_of_features,
                                                  N_of_models=self.N_of_models, orthogonality=self.orthogonality, queue=self.queue)
 
-
-# class SAWindow():
-#
-#     pass
-# class SAThread():
-#
-#     pass
 
 
 def main():
