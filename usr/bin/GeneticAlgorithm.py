@@ -162,17 +162,6 @@ class Evolution():
         return np.array(population)
 
 
-    # def initChromosome(self):
-    #
-    #     N_ones = self.N_of_features
-    #     N_zeros = len(self.D_names) - N_ones
-    #     chromosome = np.array([1]*N_ones + [0]*N_zeros)
-    #     while True:
-    #         np.random.shuffle(chromosome)
-    #         if self.orthogonality_test(chromosome) == True:
-    #             return chromosome
-
-
     def initChromosome(self):
 
         flip = lambda x: 1-x
@@ -190,6 +179,7 @@ class Evolution():
             idxs = np.append(idxs, new_descriptor_idx)
 
         return chromosome
+
 
     def fitnessFunction(self, chromosome):
 
@@ -219,24 +209,6 @@ class Evolution():
         rk /= np.sqrt(np.dot((Y_obs - Y_obs_mean).transpose(),(Y_obs - Y_obs_mean)))
         return rk.item(0)
 
-    # def r_c(self, Y_obs, X):
-    #
-    #     Y_predicted = []
-    #     for i in range(len(Y_obs)):
-    #         X_training = np.delete(X, i, 0)
-    #         Y_training = np.delete(Y_obs, i, 0)
-    #         b = np.dot(np.dot(np.linalg.inv(np.dot(X_training.transpose(),X_training)),X_training.transpose()),Y_training)
-    #         Y_prediction = np.dot(X[i],b.transpose())
-    #         Y_predicted.append(Y_prediction)
-    #
-    #     Y_predicted = np.array(Y_predicted)
-    #     Y_pred_mean = np.average(Y_predicted)
-    #     Y_obs_mean = np.average(Y_obs)
-    #
-    #     rc = np.dot((Y_predicted - Y_pred_mean).transpose(),(Y_obs - Y_obs_mean))
-    #     rc /= np.sqrt(np.dot((Y_predicted - Y_pred_mean).transpose(),(Y_predicted - Y_pred_mean)))
-    #     rc /= np.sqrt(np.dot((Y_obs - Y_obs_mean).transpose(),(Y_obs - Y_obs_mean)))
-    #     return rc.item(0)
 
     ### Implementing roulette-wheel selection via stochastic acceptance
     def roulette(self):
@@ -267,29 +239,6 @@ class Evolution():
             return ch1, ch2
 
     ### Mutate each chromosome only once
-    # Using completely random method for selecting orthogonal descriptors
-
-    # def mutate(self, chromosome):
-    #
-    #     flip = lambda x: 1-x
-    #
-    #     if np.random.uniform(0,1) < self.chromosome_mutation_rate:
-    #         while True:
-    #             idx1 = np.random.randint(self.N_of_genes)
-    #             if chromosome[idx1] == 1:
-    #                 chromosome[idx1] = flip(chromosome[idx1])
-    #                 idx2 = np.random.choice(np.where(chromosome==0)[0])
-    #                 chromosome[idx2] = flip(chromosome[idx2])
-    #                 if self.orthogonality_test(chromosome):
-    #                     break
-    #             elif chromosome[idx1] == 0:
-    #                 chromosome[idx1] = flip(chromosome[idx1])
-    #                 idx2 = np.random.choice(np.where(chromosome==1)[0])
-    #                 chromosome[idx2] = flip(chromosome[idx2])
-    #                 if self.orthogonality_test(chromosome):
-    #                     break
-
-    # Use semi-deterministic method for selecting orthogonal descriptors.
     def mutate(self, chromosome):
 
         flip = lambda x: 1-x
@@ -308,6 +257,7 @@ class Evolution():
             pickable_descriptors = np.delete(orthogonal_descriptors, des_idxs)
             new_descriptor = np.random.choice(pickable_descriptors)
             chromosome[new_descriptor] = flip(chromosome[new_descriptor])
+
 
     def breed(self, population):
 
@@ -383,7 +333,6 @@ class Evolution():
                 self.queue.put(line)
 
 
-
     def write_outputfiles(self):
 
         workbook = xls.Workbook("Output.xlsx")
@@ -413,8 +362,4 @@ class Evolution():
 
         workbook.close()
 
-        with open("outputfile.txt","w") as f:
-            f.write("Programm lõpetas")
-            pass
-        pass
 
